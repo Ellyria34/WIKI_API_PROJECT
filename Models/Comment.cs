@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,10 +23,12 @@ namespace Models
         public DateOnly CommentModificationDate { get; set; }
 
         [ForeignKey(name:"AppUser")]
-        public string? CommentAuthorId { get; set; }
-        public AppUser? CommentAuthor { get; set; }
+        public string CommentAuthorId { get; set; }
+        public AppUser CommentAuthor { get; set; }
 
         public int ArticleId { get; set; }
+
+        [DeleteBehavior(DeleteBehavior.NoAction)]
         public Article Article { get; set; }
     }
 }

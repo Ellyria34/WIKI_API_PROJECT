@@ -12,7 +12,7 @@ using Repositories.Contexts;
 namespace Repositories.Migrations
 {
     [DbContext(typeof(WIKI_API_PROJECTDbContext))]
-    [Migration("20240416120558_Init")]
+    [Migration("20240416124209_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -166,8 +166,8 @@ namespace Repositories.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
+                    b.Property<DateOnly>("AppUserBirthDay")
+                        .HasColumnType("date");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -278,6 +278,7 @@ namespace Repositories.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CommentAuthorId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("CommentCreationDate")
@@ -392,12 +393,14 @@ namespace Repositories.Migrations
                     b.HasOne("Models.Article", "Article")
                         .WithMany("Comments")
                         .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Models.AppUser", "CommentAuthor")
                         .WithMany("Comments")
-                        .HasForeignKey("CommentAuthorId");
+                        .HasForeignKey("CommentAuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Article");
 

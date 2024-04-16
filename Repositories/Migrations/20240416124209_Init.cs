@@ -30,7 +30,7 @@ namespace Repositories.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
+                    AppUserBirthDay = table.Column<DateOnly>(type: "date", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -210,7 +210,7 @@ namespace Repositories.Migrations
                     CommentText = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CommentCreationDate = table.Column<DateOnly>(type: "date", nullable: false),
                     CommentModificationDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    CommentAuthorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CommentAuthorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ArticleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -220,13 +220,13 @@ namespace Repositories.Migrations
                         name: "FK_Comments_Articles_ArticleId",
                         column: x => x.ArticleId,
                         principalTable: "Articles",
-                        principalColumn: "ArticleId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ArticleId");
                     table.ForeignKey(
                         name: "FK_Comments_AspNetUsers_CommentAuthorId",
                         column: x => x.CommentAuthorId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

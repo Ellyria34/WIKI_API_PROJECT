@@ -4,7 +4,8 @@ namespace Models
 {
     public class AppUser : IdentityUser
     {
-        public int Age { get; set; }
+        public DateOnly AppUserBirthDay { get; set; }
+
 
         public List<Article>? Articles { get; set; }
         public List<Comment>? Comments { get; set; }
