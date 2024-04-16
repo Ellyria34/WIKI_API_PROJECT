@@ -21,5 +21,10 @@ namespace Repositories.Contexts
                 optionsBuilder.LogTo(Console.WriteLine);
             }
         }
+
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //{
+        //    base.OnModelCreating(builder);
+        //}
     }
 }

@@ -13,7 +13,7 @@ namespace Models
     {
         public int ArticleId { get; set; }
 
-        [Length(10, 50)]
+        [Length(10, 50, ErrorMessage ="Le titre doit comporter entre 10 et 50 caractères.")]
         public required string Title { get; set; }
 
         public string? ArticleContent { get; set; }

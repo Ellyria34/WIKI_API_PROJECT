@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Models;
 using Repositories.Contexts;
@@ -16,36 +17,22 @@ builder.Services.AddIdentityApiEndpoints<AppUser>()
 
 // Add services to the container
 
-builder.Services.AddControllers();
-//    .AddJsonOptions(o =>
-//{
-//    o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-//});
+builder.Services.AddControllers().AddJsonOptions(o => 
+    o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddAuthorization();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-    
-    //c => {
+builder.Services.AddSwaggerGen(c => {
 
-    //c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-    //// Set the comments path for the Swagger JSON and UI.
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    // Set the comments path for the Swagger JSON and UI.
 
-    //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    //c.IncludeXmlComments(xmlPath);
-
-    ////authentification config
-    //c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-    //{
-    //    In = ParameterLocation.Header,
-    //    Name = "Authorization",
-    //    Type = SecuritySchemeType.ApiKey
-    //});
-
-    //c.OperationFilter<SecurityRequirementsOperationFilter>();});
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
 
 
 builder.Services.AddDbContext<WIKI_API_PROJECTDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("WIKI_API_PROJECTDbContextCS")));

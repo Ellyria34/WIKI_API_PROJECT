@@ -6,7 +6,6 @@ namespace Models
     {
         public DateOnly AppUserBirthDay { get; set; }
 
-
         public List<Article>? Articles { get; set; }
         public List<Comment>? Comments { get; set; }
     }

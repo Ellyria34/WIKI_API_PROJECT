@@ -13,7 +13,7 @@ namespace Models
     {
         public int CommentId { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(100, ErrorMessage = "Le commentaire ne doit pas dépasser 100 caractères.")]
         public string CommentText { get; set; } = string.Empty;
 
         //public string CommentAuthor { get; set; }
