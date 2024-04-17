@@ -14,6 +14,6 @@ namespace DTOs
 
         public string? ArticleContent { get; set; }
 
-        public Topic Topic { get; set; }
+        public int TopicId { get; set; }
     }
 }

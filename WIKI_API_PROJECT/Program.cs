@@ -1,8 +1,10 @@
+using IRepositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Models;
 using Repositories.Contexts;
+using Repositories.Repositories;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -46,7 +48,7 @@ builder.Services.AddSwaggerGen(c =>
 
 
 builder.Services.AddDbContext<WIKI_API_PROJECTDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("WIKI_API_PROJECTDbContextCS")));
-
+builder.Services.AddScoped<ArticleIRepository, ArticleRepository>();
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
 ﻿using Models;
+using DTOs;
 
 namespace IRepositories
 {
@@ -8,7 +9,7 @@ namespace IRepositories
         /// GetAll Article.
         /// </summary>
         /// <returns>All articles.</returns>
-        Task<List<Article>> GetAllArticleAsync();
+        Task<List<GetAllArticleDTO>> GetAllArticleAsync();
 
         /// <summary>
         /// Get All article by Author sorted in ascending order.
@@ -63,7 +64,7 @@ namespace IRepositories
         /// </summary>
         /// <param name="article"></param>
         /// <returns></returns>
-        Task CreateAsync(Article article, AppUser appuser);
+        Task CreateAsync(Article article, AppUser appUser);
 
 
         /// <summary>

@@ -30,6 +30,16 @@ namespace WIKI_API_PROJECT.Controllers
             _roleManager = roleManager;
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<GetAllArticleDTO>>> GetAllArticleAsync()
+        {
+            List<GetAllArticleDTO> articles = await _repository.GetAllArticleAsync();
+            return Ok (articles);
+        }
+
+
+        [HttpPost]
         public async Task<ActionResult> CreateArticle(CreateArticleDTO articleDTO)
         {
             var userconnected = await _userManager.GetUserAsync(User);
@@ -38,7 +48,8 @@ namespace WIKI_API_PROJECT.Controllers
                 var article = new Article
                 {
                     Title = articleDTO.Title,
-                    ArticleContent = articleDTO.ArticleContent
+                    ArticleContent = articleDTO.ArticleContent,
+                    TopicId = articleDTO.TopicId,
                 };
                 await _repository.CreateAsync(article, userconnected);
                 return Ok("Article created !");

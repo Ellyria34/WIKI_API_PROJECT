@@ -1,4 +1,6 @@
-﻿using IRepositories;
+﻿using DTOs;
+using IRepositories;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using Repositories.Contexts;
 
@@ -18,7 +20,7 @@ namespace Repositories.Repositories
         /// <param name="article"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task CreateAsync(Article article, int AppUserId)
+        public async Task CreateAsync(Article article, AppUser appUser)
         {
             if (article == null)
             {
@@ -27,7 +29,11 @@ namespace Repositories.Repositories
             else
             {
                 article.ArticleCreationDate = DateOnly.FromDateTime(DateTime.UtcNow);
-                _context.Articles.AddAsync(article);
+                article.ArticleAuthor = appUser;
+                article.ArticleAuthorId = appUser.Id;
+
+
+                await _context.Articles.AddAsync(article);
                 await _context.SaveChangesAsync();
             }
         }
@@ -36,10 +42,18 @@ namespace Repositories.Repositories
         {
             throw new NotImplementedException();
         }
-
-        public Task<List<Article>> GetAllArticleAsync()
+         
+        public async Task<List<GetAllArticleDTO>> GetAllArticleAsync()
         {
-            throw new NotImplementedException();
+            var articles= await _context.Articles.Include(a=>a.Topic)
+                .Include(a=>a.ArticleAuthor)
+                .Select(a=>new GetAllArticleDTO { 
+                    Title = a.Title, 
+                    AuthorName= a.ArticleAuthor.UserName, 
+                    ArticleCreationDate = a.ArticleCreationDate, 
+                    TopicName = a.Topic.TopicName})
+                .ToListAsync();
+            return articles;
         }
 
         public Task<List<Article>> GetAllArticleByAuthorsAscAsync(Guid id)
