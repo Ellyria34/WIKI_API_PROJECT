@@ -72,7 +72,7 @@ namespace IRepositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task DeleteAsync(int id);
+        Task DeleteArticleAsync(Article article, AppUser appUser);
 
 
         /// <summary>

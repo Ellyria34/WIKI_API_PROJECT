@@ -31,16 +31,33 @@ namespace WIKI_API_PROJECT.Controllers
             _roleManager = roleManager;
         }
 
+        /// <summary>
+        /// Get all article
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<List<GetAllArticleDTO>>> GetAllArticleAsync()
         {
             List<GetAllArticleDTO> articles = await _repository.GetAllArticleAsync();
-            return Ok (articles);
+            if (articles != null)
+            {
+                return Ok(articles);
+            }
+            else { return Problem("There are no items in BDD"); }
+
         }
 
 
+        /// <summary>
+        /// Create an new article
+        /// </summary>
+        /// <param name="articleDTO"></param>
+        /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+
         public async Task<ActionResult> CreateArticle(CreateArticleDTO articleDTO)
         {
             var userconnected = await _userManager.GetUserAsync(User);
@@ -59,19 +76,36 @@ namespace WIKI_API_PROJECT.Controllers
         }
 
 
-
-        [HttpPut]
-        public async Task<ActionResult<Article>> UpdateArticle(UpdateArticleDTO updateArticleDTO)
+        [HttpDelete]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> DeleteArticleAsync(int id)
         {
-            var userconnected = await _userManager.GetUserAsync(User);
+            var nbRows = await _repository.Where(a => a.Id == id)
+                .ExecuteDeleteAsync();
 
-            if (userconnected == Article.)
+            if (nbRows == 0)
             {
-
+                return NotFound("This article was not found.");
             }
 
+            return Ok("The article has been deleted.");
         }
-
-
     }
+
+
+
+
+
+    //[HttpPut]
+    //public async Task<ActionResult<Article>> UpdateArticle(UpdateArticleDTO updateArticleDTO)
+    //{
+    //    var userconnected = await _userManager.GetUserAsync(User);
+
+    //    if (userconnected == Article.)
+    //    {
+
+    //    }
+
+    //}
 }

@@ -39,10 +39,13 @@ namespace Repositories.Repositories
             }
         }
 
-        public Task DeleteAsync(int id)
+
+        public async Task DeleteArticleAsync(Article article, AppUser appUser)
         {
-            throw new NotImplementedException();
+            var nbRow = await _context.Articles.Where(a => a.ArticleId == article.ArticleId).ExecuteDeleteAsync();
+            //await _context.SaveChangesAsync();
         }
+
 
         public async Task<List<GetAllArticleDTO>> GetAllArticleAsync()
         {
