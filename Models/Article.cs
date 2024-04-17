@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Models
 {
@@ -14,7 +10,7 @@ namespace Models
         public int ArticleId { get; set; }
 
         [Length(10, 50, ErrorMessage ="Le titre doit comporter entre 10 et 50 caractères.")]
-        public required string Title { get; set; }
+        public string Title { get; set; }
 
         public string? ArticleContent { get; set; }
 
@@ -28,7 +24,7 @@ namespace Models
 
         [ForeignKey(name: "AppUser")]
         public string ArticleAuthorId { get; set; }
-        public required AppUser ArticleAuthor { get; set; }
+        public AppUser ArticleAuthor { get; set; }
 
         public int TopicId { get; set; }
 

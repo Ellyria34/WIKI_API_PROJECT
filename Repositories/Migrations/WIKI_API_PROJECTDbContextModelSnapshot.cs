@@ -312,7 +312,7 @@ namespace Repositories.Migrations
 
                     b.HasKey("TopicId");
 
-                    b.ToTable("Topic");
+                    b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

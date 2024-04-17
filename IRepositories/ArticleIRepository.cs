@@ -63,7 +63,7 @@ namespace IRepositories
         /// </summary>
         /// <param name="article"></param>
         /// <returns></returns>
-        Task CreateAsync(Article article);
+        Task CreateAsync(Article article, AppUser appuser);
 
 
         /// <summary>

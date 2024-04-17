@@ -12,7 +12,7 @@ using Repositories.Contexts;
 namespace Repositories.Migrations
 {
     [DbContext(typeof(WIKI_API_PROJECTDbContext))]
-    [Migration("20240416124209_Init")]
+    [Migration("20240417103356_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -315,7 +315,7 @@ namespace Repositories.Migrations
 
                     b.HasKey("TopicId");
 
-                    b.ToTable("Topic");
+                    b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

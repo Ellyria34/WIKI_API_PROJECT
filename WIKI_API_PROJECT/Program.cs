@@ -1,5 +1,5 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Models;
 using Repositories.Contexts;
@@ -12,21 +12,31 @@ var builder = WebApplication.CreateBuilder(args);
 
 //Activate Identity APIs
 builder.Services.AddIdentityApiEndpoints<AppUser>()
-                //.AddRoles<IdentityRole>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<WIKI_API_PROJECTDbContext>();
 
 // Add services to the container
 
-builder.Services.AddControllers().AddJsonOptions(o => 
+builder.Services.AddControllers().AddJsonOptions(o =>
     o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddAuthorization();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {
+builder.Services.AddSwaggerGen(c =>
+{
 
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    
+    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+    c.OperationFilter<SecurityRequirementsOperationFilter>();
+
     // Set the comments path for the Swagger JSON and UI.
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

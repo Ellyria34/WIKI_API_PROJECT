@@ -8,7 +8,7 @@ namespace Repositories.Contexts
     {
         public DbSet<Article> Articles { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<Topic> Topic { get; set; }
+        public DbSet<Topic> Topics { get; set; }
 
         public WIKI_API_PROJECTDbContext(DbContextOptions<WIKI_API_PROJECTDbContext> dbContextOptions) : base(dbContextOptions) { }
 
@@ -22,9 +22,6 @@ namespace Repositories.Contexts
             }
         }
 
-        //protected override void OnModelCreating(ModelBuilder builder)
-        //{
-        //    base.OnModelCreating(builder);
-        //}
+     
     }
 }

@@ -52,7 +52,7 @@ namespace Repositories.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Topic",
+                name: "Topics",
                 columns: table => new
                 {
                     TopicId = table.Column<int>(type: "int", nullable: false)
@@ -61,7 +61,7 @@ namespace Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Topic", x => x.TopicId);
+                    table.PrimaryKey("PK_Topics", x => x.TopicId);
                 });
 
             migrationBuilder.CreateTable(
@@ -194,9 +194,9 @@ namespace Repositories.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Articles_Topic_TopicId",
+                        name: "FK_Articles_Topics_TopicId",
                         column: x => x.TopicId,
-                        principalTable: "Topic",
+                        principalTable: "Topics",
                         principalColumn: "TopicId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -320,7 +320,7 @@ namespace Repositories.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Topic");
+                name: "Topics");
         }
     }
 }
