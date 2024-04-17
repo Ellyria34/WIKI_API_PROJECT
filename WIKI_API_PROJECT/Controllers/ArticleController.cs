@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Repositories.Contexts;
 
 namespace WIKI_API_PROJECT.Controllers
 {
@@ -55,6 +56,20 @@ namespace WIKI_API_PROJECT.Controllers
                 return Ok("Article created !");
             }
             catch (Exception ex) { return Problem(ex.Message); }
+        }
+
+
+
+        [HttpPut]
+        public async Task<ActionResult<Article>> UpdateArticle(UpdateArticleDTO updateArticleDTO)
+        {
+            var userconnected = await _userManager.GetUserAsync(User);
+
+            if (userconnected == Article.)
+            {
+
+            }
+
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using DTOs;
 using IRepositories;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Repositories.Contexts;
@@ -42,16 +43,18 @@ namespace Repositories.Repositories
         {
             throw new NotImplementedException();
         }
-         
+
         public async Task<List<GetAllArticleDTO>> GetAllArticleAsync()
         {
-            var articles= await _context.Articles.Include(a=>a.Topic)
-                .Include(a=>a.ArticleAuthor)
-                .Select(a=>new GetAllArticleDTO { 
-                    Title = a.Title, 
-                    AuthorName= a.ArticleAuthor.UserName, 
-                    ArticleCreationDate = a.ArticleCreationDate, 
-                    TopicName = a.Topic.TopicName})
+            var articles = await _context.Articles.Include(a => a.Topic)
+                .Include(a => a.ArticleAuthor)
+                .Select(a => new GetAllArticleDTO
+                {
+                    Title = a.Title,
+                    AuthorName = a.ArticleAuthor.UserName,
+                    ArticleCreationDate = a.ArticleCreationDate,
+                    TopicName = a.Topic.TopicName
+                })
                 .ToListAsync();
             return articles;
         }
@@ -66,10 +69,16 @@ namespace Repositories.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Article> GetArticleByIdAsync(int id)
+        public async Task<Article> GetArticleByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            Article article = await _context.Articles.FirstOrDefaultAsync(a => a.ArticleId == id);
+            if (article == null)
+            {
+                return article;
+            }
+            throw new ArgumentException();
         }
+
 
         public Task<List<Article>> GetArticlesByTopicAscAsync(string topicName)
         {
@@ -86,9 +95,17 @@ namespace Repositories.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Article> UpdateAsync(Article article)
+        public async Task<Article> UpdateAsync(Article article, AppUser appUser)
         {
-            throw new NotImplementedException();
+            var nbRow = await _context.Articles
+                .Where(a => a.ArticleId == article.ArticleId).ExecuteUpdateAsync (
+                updates => updates
+                    .SetProperty(a => a.Title, article.Title)
+                    .SetProperty(a => a.ArticleContent, article.ArticleContent)
+                    .SetProperty(a => a.TopicId, article.TopicId));
+
+            return article;
         }
     }
+
 }

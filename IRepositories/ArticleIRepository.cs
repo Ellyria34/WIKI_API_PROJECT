@@ -80,6 +80,6 @@ namespace IRepositories
         /// </summary>
         /// <param name="article"></param>
         /// <returns>The article updated.</returns>
-        Task <Article> UpdateAsync(Article article);
+        Task <Article> UpdateAsync(Article article, AppUser appUser);
     }
 }
