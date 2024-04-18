@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using Models;
 using System.Data;
@@ -11,6 +12,7 @@ namespace WIKI_API_PROJECT.Controllers
 {
     [Route("api/[controller]/[Action]")]
     [ApiController]
+   
     public class AppUserController : ControllerBase
     {
         UserManager<AppUser> _userManager;
@@ -25,6 +27,8 @@ namespace WIKI_API_PROJECT.Controllers
             _signInManager = signInManager;
             _roleManager = roleManager;
         }
+
+
 
         /// <summary>
         /// Create User account method
@@ -60,32 +64,32 @@ namespace WIKI_API_PROJECT.Controllers
         }
 
 
-        /// <summary>
-        /// Login to an account
-        /// </summary>
-        /// <param name="loginDTO"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        ///// <summary>
+        ///// Login to an account
+        ///// </summary>
+        ///// <param name="loginDTO"></param>
+        ///// <returns></returns>
+        //[HttpPost]
+        //[ProducesResponseType(200)]
+        //[ProducesResponseType(400)]
 
-        public async Task<ActionResult> Login(LoginDTO loginDTO)
-        {
-            var appUser = await _userManager.FindByNameAsync(loginDTO.UserName);
+        //public async Task<ActionResult> Login(LoginDTO loginDTO)
+        //{
+        //    var appUser = await _userManager.FindByNameAsync(loginDTO.UserName);
 
-            if (appUser == null) { return BadRequest("No account exists with this username. Verify your login or create an account"); }
+        //    if (appUser == null) { return BadRequest("No account exists with this username. Verify your login or create an account"); }
 
-            if (appUser != null && await _userManager.CheckPasswordAsync(appUser, loginDTO.Password))
-            {
-                // Vous pouvez créer un jeton d'authentification ici si vous le souhaitez
+        //    if (appUser != null && await _userManager.CheckPasswordAsync(appUser, loginDTO.Password))
+        //    {
+        //        // Vous pouvez créer un jeton d'authentification ici si vous le souhaitez
 
-                return Ok($"Successful connection! Welcome {loginDTO.UserName}");
-            }
-            else
-            {
-                return BadRequest("Incorrect username or password.");
-            }
-        }
+        //        return Ok($"Successful connection! Welcome {loginDTO.UserName}");
+        //    }
+        //    else
+        //    {
+        //        return BadRequest("Incorrect username or password.");
+        //    }
+        //}
 
 
         /// <summary>
@@ -114,33 +118,42 @@ namespace WIKI_API_PROJECT.Controllers
         }
 
 
-        //    /// <summary>
-        //    /// Add the currently logged-in user to the "ADMIN" role
-        //    /// </summary>
-        //    /// <returns></returns>
-        //    [HttpGet]
-        //    [Authorize(Roles = "ADMIN")]
-        //    public async Task<IActionResult> AddUserToRoleAdmin()
-        //    {
-        //        var appUser = await _userManager.GetUserAsync(User);
 
-        //        await _userManager.AddToRoleAsync(appUser, "ADMIN");
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _userManager.Users.ToListAsync();
 
-        //        return Ok($"{User.Identity.Name} is now Admin");
-        //    }
+            return Ok(users);
+        }
+
+        /// <summary>
+        /// Add the currently logged-in user to the "ADMIN" role
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> AddUserToRoleAdmin()
+        {
+            var appUser = await _userManager.GetUserAsync(User);
+
+            await _userManager.AddToRoleAsync(appUser, "ADMIN");
+
+            return Ok($"{User.Identity.Name} is now Admin");
+        }
 
 
+        /// <summary>
+        /// Check whether the user currently logged in belongs to the "ADMIN" role
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> IsUserInRole()
+        {
+            var appUser = await _userManager.GetUserAsync(User);
 
-        //    /// <summary>
-        //    /// Check whether the user currently logged in belongs to the "ADMIN" role
-        //    /// </summary>
-        //    /// <returns></returns>
-        //    [HttpGet]
-        //    public async Task<ActionResult> IsUserInRole()
-        //    {
-        //        var appUser = await _userManager.GetUserAsync(User);
-
-        //        return Ok($"{_userManager.IsInRoleAsync(appUser, "ADMIN")}");
-        //    }
+            return Ok($"{await _userManager.IsInRoleAsync(appUser, "ADMIN")}");
+        }
     }
 }

@@ -35,20 +35,64 @@ namespace WIKI_API_PROJECT.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<List<GetAllArticleDTO>>> GetAllArticleAsync()
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult<List<GetAllArticleDTO>>> GetAllArticle()
         {
             List<GetAllArticleDTO> articles = await _repository.GetAllArticleAsync();
             if (articles != null)
             {
                 return Ok(articles);
             }
-            else { return Problem("There are no items in BDD"); }
-
+            else { return Problem("There are no Articles in BDD"); }
         }
 
+        /// <summary>
+        /// Get all article ordered by Author's name Ascendant
+        /// </summary>
+        /// <returns>A list of article ordered </returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<GetAllArticleDTO>> GetArticleByIdAsync(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult<List<GetAllArticleDTO>>> GetAllArticleByAuthorsAsc()
+        {
+            List<GetAllArticleDTO> articles = await _repository.GetAllArticleByAuthorsAscAsync();
+            if (articles != null)
+            {
+                return Ok(articles);
+            }
+            else { return Problem("There are no Articles in BDD"); }
+        }
+
+        /// <summary>
+        /// Get all article ordered by Author's name Descendant
+        /// </summary>
+        /// <returns>A list of article ordered </returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult<List<GetAllArticleDTO>>> GetAllArticleByAuthorsDesc()
+        {
+            List<GetAllArticleDTO> articles = await _repository.GetAllArticleByAuthorsDescAsync();
+            if (articles != null)
+            {
+                return Ok(articles);
+            }
+            else { return Problem("There are no Articles in BDD"); }
+        }
+
+        /// <summary>
+        /// Get an article.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<GetArticleByDTO>> GetArticleById(int id)
         {
             Article articles = await _repository.GetArticleByIdAsync(id);
             if (articles != null)
@@ -56,7 +100,6 @@ namespace WIKI_API_PROJECT.Controllers
                 return Ok(articles);
             }
             else { return Problem("There are no items in BDD"); }
-
         }
 
 
@@ -71,7 +114,7 @@ namespace WIKI_API_PROJECT.Controllers
 
         public async Task<ActionResult> CreateArticle(CreateArticleDTO articleDTO)
         {
-            var userconnected = await _userManager.GetUserAsync(User);
+            var userConnected = await _userManager.GetUserAsync(User);
             try
             {
                 var article = new Article
@@ -80,7 +123,7 @@ namespace WIKI_API_PROJECT.Controllers
                     ArticleContent = articleDTO.ArticleContent,
                     TopicId = articleDTO.TopicId,
                 };
-                await _repository.CreateAsync(article, userconnected);
+                await _repository.CreateAsync(article, userConnected);
                 return Ok("Article created !");
             }
             catch (Exception ex) { return Problem(ex.Message); }
@@ -95,7 +138,7 @@ namespace WIKI_API_PROJECT.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<ActionResult> DeleteArticleAsync(int id)
+        public async Task<ActionResult> DeleteArticle(int id)
         {
             var userconnected = await _userManager.GetUserAsync(User);
             bool isAdmin = await _userManager.IsInRoleAsync(userconnected, "ADMIN");
@@ -115,13 +158,11 @@ namespace WIKI_API_PROJECT.Controllers
         }
 
 
-
-
         /// <summary>
         /// Update an article
         /// </summary>
         /// <param name="updateArticleDTO"></param>
-        /// <returns></returns>
+        /// <returns>The article updated.</returns>
         [HttpPut]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]

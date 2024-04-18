@@ -15,16 +15,16 @@ namespace IRepositories
         /// Get All article by Author sorted in ascending order.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>All article write by this Author.</returns>
-        Task<List<Article>> GetAllArticleByAuthorsAscAsync(Guid id);
+        /// <returns>All article order.</returns>
+        Task<List<GetAllArticleDTO>> GetAllArticleByAuthorsAscAsync();
 
 
         /// <summary>
         /// Get All article by Author sorted in descending order.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>All article write by this Author.</returns>
-        Task<List<Article>> GetAllArticleByAuthorsDescAsync(Guid id);
+        /// <returns>All article order.</returns>
+        Task<List<GetAllArticleDTO>> GetAllArticleByAuthorsDescAsync();
 
 
         /// <summary>

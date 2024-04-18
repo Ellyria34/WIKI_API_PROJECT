@@ -48,6 +48,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddDbContext<WIKI_API_PROJECTDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("WIKI_API_PROJECTDbContextCS")));
 builder.Services.AddScoped<ArticleIRepository, ArticleRepository>();
+builder.Services.AddScoped<TopicIRepository, TopicRepository>();
 
 var app = builder.Build();
 
