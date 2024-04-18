@@ -72,7 +72,7 @@ namespace IRepositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task DeleteArticleAsync(Article article, AppUser appUser);
+        Task DeleteArticleAsync(Article article);
 
 
         /// <summary>
@@ -80,6 +80,6 @@ namespace IRepositories
         /// </summary>
         /// <param name="article"></param>
         /// <returns>The article updated.</returns>
-        Task <Article> UpdateAsync(Article article, AppUser appUser);
+        Task <UpdateArticleDTO> UpdateArticleAsync(UpdateArticleDTO article);
     }
 }

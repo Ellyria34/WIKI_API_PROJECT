@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
-    internal class UpdateArticleDTO
+    public class UpdateArticleDTO
     {
-        public int id;
+        public int id {  get; set; }
         public string Title { get; set; }
         public string? ArticleContent { get; set; }
         public int TopicId { get; set; }

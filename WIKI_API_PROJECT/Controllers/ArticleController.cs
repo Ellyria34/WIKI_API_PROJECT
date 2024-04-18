@@ -3,9 +3,7 @@ using IRepositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Models;
-using Repositories.Contexts;
 
 namespace WIKI_API_PROJECT.Controllers
 {
@@ -48,6 +46,19 @@ namespace WIKI_API_PROJECT.Controllers
 
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult<GetAllArticleDTO>> GetArticleByIdAsync(int id)
+        {
+            Article articles = await _repository.GetArticleByIdAsync(id);
+            if (articles != null)
+            {
+                return Ok(articles);
+            }
+            else { return Problem("There are no items in BDD"); }
+
+        }
+
 
         /// <summary>
         /// Create an new article
@@ -75,37 +86,68 @@ namespace WIKI_API_PROJECT.Controllers
             catch (Exception ex) { return Problem(ex.Message); }
         }
 
-
+        /// <summary>
+        /// Delete an article by his id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<ActionResult> DeleteArticleAsync(int id)
         {
-            var nbRows = await _repository.Where(a => a.Id == id)
-                .ExecuteDeleteAsync();
+            var userconnected = await _userManager.GetUserAsync(User);
+            bool isAdmin = await _userManager.IsInRoleAsync(userconnected, "ADMIN");
 
-            if (nbRows == 0)
+            Article article = await _repository.GetArticleByIdAsync(id);
+
+            if (article != null)
             {
-                return NotFound("This article was not found.");
+                if (isAdmin || article.ArticleAuthorId == userconnected.Id)
+                {
+                    await _repository.DeleteArticleAsync(article);
+                    return Ok($"Article n° {id} has been deleted");
+                }
+                return Problem("You do not have the authorization to delete this article");
             }
+            return BadRequest("No Articles match this id.");
+        }
 
-            return Ok("The article has been deleted.");
+
+
+
+        /// <summary>
+        /// Update an article
+        /// </summary>
+        /// <param name="updateArticleDTO"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult<Article>> UpdateArticle(UpdateArticleDTO updateArticleDTO)
+        {
+            var userconnected = await _userManager.GetUserAsync(User);
+            bool isAdmin = await _userManager.IsInRoleAsync(userconnected, "ADMIN");
+
+            Article article = await _repository.GetArticleByIdAsync(updateArticleDTO.id);
+
+            if (article != null)
+            {
+                try
+                {
+                    if (isAdmin || article.ArticleAuthorId == userconnected.Id)
+                    {
+                        await _repository.UpdateArticleAsync(updateArticleDTO);
+                        return Ok($"Article n° {article.ArticleId} has been modified");
+                    }
+                    return Problem("You do not have the authorization to update this article");
+                }
+                catch (Exception ex) { return StatusCode(500, ex.Message); }
+                
+            }
+            return BadRequest("No Articles match this id.");
         }
     }
-
-
-
-
-
-    //[HttpPut]
-    //public async Task<ActionResult<Article>> UpdateArticle(UpdateArticleDTO updateArticleDTO)
-    //{
-    //    var userconnected = await _userManager.GetUserAsync(User);
-
-    //    if (userconnected == Article.)
-    //    {
-
-    //    }
-
-    //}
 }

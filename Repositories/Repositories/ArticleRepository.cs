@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Repositories.Contexts;
+using System.Data;
 
 namespace Repositories.Repositories
 {
@@ -40,10 +41,10 @@ namespace Repositories.Repositories
         }
 
 
-        public async Task DeleteArticleAsync(Article article, AppUser appUser)
+        public async Task DeleteArticleAsync(Article article)
         {
             var nbRow = await _context.Articles.Where(a => a.ArticleId == article.ArticleId).ExecuteDeleteAsync();
-            //await _context.SaveChangesAsync();
+            
         }
 
 
@@ -53,6 +54,7 @@ namespace Repositories.Repositories
                 .Include(a => a.ArticleAuthor)
                 .Select(a => new GetAllArticleDTO
                 {
+                    Id = a.ArticleId,
                     Title = a.Title,
                     AuthorName = a.ArticleAuthor.UserName,
                     ArticleCreationDate = a.ArticleCreationDate,
@@ -74,8 +76,8 @@ namespace Repositories.Repositories
 
         public async Task<Article> GetArticleByIdAsync(int id)
         {
-            Article article = await _context.Articles.FirstOrDefaultAsync(a => a.ArticleId == id);
-            if (article == null)
+            Article article = await _context.Articles.FindAsync(id);
+            if (article != null)
             {
                 return article;
             }
@@ -98,16 +100,18 @@ namespace Repositories.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Article> UpdateAsync(Article article, AppUser appUser)
+        public async Task<UpdateArticleDTO> UpdateArticleAsync(UpdateArticleDTO article)
         {
             var nbRow = await _context.Articles
-                .Where(a => a.ArticleId == article.ArticleId).ExecuteUpdateAsync (
+                .Where(a => a.ArticleId == article.id).ExecuteUpdateAsync (
                 updates => updates
                     .SetProperty(a => a.Title, article.Title)
                     .SetProperty(a => a.ArticleContent, article.ArticleContent)
                     .SetProperty(a => a.TopicId, article.TopicId));
 
-            return article;
+            if (nbRow > 0)
+                return article;
+            else throw new Exception(); 
         }
     }
 

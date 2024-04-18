@@ -12,7 +12,7 @@ using Repositories.Contexts;
 namespace Repositories.Migrations
 {
     [DbContext(typeof(WIKI_API_PROJECTDbContext))]
-    [Migration("20240417191623_Init")]
+    [Migration("20240418084441_Init")]
     partial class Init
     {
         /// <inheritdoc />
