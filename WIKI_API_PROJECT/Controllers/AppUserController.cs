@@ -118,7 +118,10 @@ namespace WIKI_API_PROJECT.Controllers
         }
 
 
-
+        /// <summary>
+        /// Get all Users
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
